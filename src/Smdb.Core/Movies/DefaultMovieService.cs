@@ -13,15 +13,11 @@ public class DefaultMovieService : IMovieService
     {
         if (page < 1)
         {
-            return new Result<PagedResult<Movie>>(
-            new Exception("Page must be >= 1."),
-            (int)HttpStatusCode.BadRequest);
+            return new Result<PagedResult<Movie>>( new Exception("Page must be >= 1."), (int)HttpStatusCode.BadRequest);
         }
         if (size < 1)
         {
-            return new Result<PagedResult<Movie>>(
-            new Exception("Page size must be >= 1."),
-            (int)HttpStatusCode.BadRequest);
+            return new Result<PagedResult<Movie>>(  new Exception("Page size must be >= 1."),  (int)HttpStatusCode.BadRequest);
         }
         var pagedResult = await movieRepository.ReadMovies(page, size);
         var result = pagedResult == null
@@ -47,21 +43,14 @@ public class DefaultMovieService : IMovieService
     {
         var movie = await movieRepository.ReadMovie(id);
         var result = movie == null
-        ? new Result<Movie>(
-        new Exception($"Could not read movie with id {id}."),
-        (int)HttpStatusCode.NotFound)
-        : new Result<Movie>(movie, (int)HttpStatusCode.OK);
-        return result;
+        ? new Result<Movie>(  new Exception($"Could not read movie with id {id}."), (int)HttpStatusCode.NotFound) : new Result<Movie>(movie, (int)HttpStatusCode.OK); return result;
     }
     public async Task<Result<Movie>> UpdateMovie(int id, Movie newData)
     {
         var validationResult = ValidateMovie(newData);
         if (validationResult != null) { return validationResult; }
         var movie = await movieRepository.UpdateMovie(id, newData);
-        var result = movie == null ? new Result<Movie>(
-        new Exception($"Could not update movie {newData} with id {id}."),
-        (int)HttpStatusCode.NotFound)
-        : new Result<Movie>(movie, (int)HttpStatusCode.OK);
+        var result = movie == null ? new Result<Movie>(  new Exception($"Could not update movie {newData} with id {id}."),  (int)HttpStatusCode.NotFound) : new Result<Movie>(movie, (int)HttpStatusCode.OK);
         return result;
     }
     public async Task<Result<Movie>> DeleteMovie(int id)
