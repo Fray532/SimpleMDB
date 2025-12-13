@@ -3,8 +3,12 @@ namespace Smdb.Api;
 using Shared.Http;
 using Smdb.Api.Movies;
 using Smdb.Core.Movies;
+using Smdb.Core.Db;
+
 public class App : HttpServer
 {
+    // <-- Rest of the code below goes here.
+
     public override void Init()
     {
         var db = new MemoryDatabase();
@@ -13,6 +17,7 @@ public class App : HttpServer
         var movieCtrl = new MoviesController(movieServ);
         var movieRouter = new MoviesRouter(movieCtrl);
         var apiRouter = new HttpRouter();
+
         router.Use(HttpUtils.StructuredLogging);
         router.Use(HttpUtils.CentralizedErrorHandling);
         router.Use(HttpUtils.AddResponseCorsHeaders);
@@ -20,6 +25,7 @@ public class App : HttpServer
         router.Use(HttpUtils.ParseRequestUrl);
         router.Use(HttpUtils.ParseRequestQueryString);
         router.UseParametrizedRouteMatching();
+
         router.UseRouter("/api/v1", apiRouter);
         apiRouter.UseRouter("/movies", movieRouter);
     }
